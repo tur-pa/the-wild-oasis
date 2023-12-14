@@ -11,18 +11,20 @@ import { FaTrash } from "react-icons/fa";
 import { useCreateCabin } from "./useCreateCabin";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
+// const TableRow = styled.div`
+//   display: grid;
+//   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+//   column-gap: 2.4rem;
+//   align-items: center;
+//   padding: 1.4rem 2.4rem;
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+//   &:not(:last-child) {
+//     border-bottom: 1px solid var(--color-grey-100);
+//   }
+// `;
 
 const Img = styled.img`
   display: block;
@@ -78,7 +80,7 @@ function CabinRow({ cabin }) {
 
   return (
     <>
-      <TableRow role="row">
+      <Table.Row columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
         <Img src={image}></Img>
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity}</div>
@@ -89,35 +91,42 @@ function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <div>
-          <button disabled={isCreating} onClick={handleDuplicate}>
-            <BiSolidDuplicate></BiSolidDuplicate>
-          </button>
-
           <Modal>
-            <Modal.Open opens="edit">
-              <button>
-                <FaPencilAlt></FaPencilAlt>
-              </button>
-            </Modal.Open>
-            <Modal.Window name="edit">
-              <CreateCabinForm cabinToEdit={cabin}></CreateCabinForm>
-            </Modal.Window>
+            <Menus.Menu>
+              <Menus.Toggle id={cabinId} />
 
-            <Modal.Open>
-              <button>
-                <FaTrash></FaTrash>
-              </button>
-            </Modal.Open>
-            <Modal.Window>
-              <ConfirmDelete
-                resourceName="cabins"
-                disabled={isDeleting}
-                onConfirm={() => deleteCabin(cabinId)}
-              ></ConfirmDelete>
-            </Modal.Window>
+              <Menus.List id={cabinId}>
+                <Modal.Open opens="edit">
+                  <Menus.Button icon={<FaPencilAlt />}>Edit</Menus.Button>
+                </Modal.Open>
+
+                <Modal.Open opens="delete">
+                  <Menus.Button icon={<FaTrash />}>Delete</Menus.Button>
+                </Modal.Open>
+
+                <Menus.Button
+                  icon={<BiSolidDuplicate />}
+                  onClick={handleDuplicate}
+                >
+                  Duplicate
+                </Menus.Button>
+              </Menus.List>
+
+              <Modal.Window name="edit">
+                <CreateCabinForm cabinToEdit={cabin}></CreateCabinForm>
+              </Modal.Window>
+
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName="cabins"
+                  disabled={isDeleting}
+                  onConfirm={() => deleteCabin(cabinId)}
+                ></ConfirmDelete>
+              </Modal.Window>
+            </Menus.Menu>
           </Modal>
         </div>
-      </TableRow>
+      </Table.Row>
     </>
   );
 }

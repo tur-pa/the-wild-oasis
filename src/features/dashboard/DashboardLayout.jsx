@@ -16,7 +16,7 @@ const StyledDashboardLayout = styled.div`
 `;
 
 function DashboardLayout() {
-  const { bookings, isLoadingBooking } = useRecentBookings();
+  const { bookings, isLoading: isLoadingBooking } = useRecentBookings();
   const {
     confirmedStays,
     isLoading: isLoadingStays,
@@ -26,7 +26,7 @@ function DashboardLayout() {
 
   if (isLoadingBooking || isLoadingStays || isLoadingCabins)
     return <Spinner></Spinner>;
-  console.log(bookings);
+
   return (
     <StyledDashboardLayout>
       <Stats
